@@ -36,12 +36,29 @@ yarn add lipo-express
 ## Usage
 
 ```js
-const LipoExpress = require('lipo-express');
+const multer = require('multer');
+const bytes = require('bytes');
+const express = require('express');
+const lipoExpress = require('lipo-express');
 
-const lipoExpress = new LipoExpress();
+const app = express();
 
-console.log(lipoExpress.renderName());
-// script
+const upload = multer({
+  limits: {
+    fieldNameSize: bytes('100b'),
+    fieldSize: bytes('1mb'),
+    fileSize: bytes('5mb'),
+    fields: 10,
+    files: 1
+  }
+});
+app.use(upload.single('input'));
+
+// use lipo's express middleware
+app.use(lipoExpress);
+
+// start server
+app.listen(3000);
 ```
 
 
