@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const Boom = require('boom');
+const Boom = require('@hapi/boom');
 const sharp = require('sharp');
 
 const INVALID_QUEUE = 'Image transformation queue was invalid.';
@@ -29,6 +29,7 @@ async function lipoExpress(req, res, next) {
           metadata = true;
           return transform;
         }
+
         return transform[task.shift()](...task);
       },
       _.isObject(options) ? sharp(options) : sharp()
@@ -47,8 +48,8 @@ async function lipoExpress(req, res, next) {
       res.send(info);
     } else if (req.file) req.file.stream.pipe(transform).pipe(res);
     else transform.pipe(res);
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 }
 
