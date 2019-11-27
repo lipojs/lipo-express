@@ -1,7 +1,7 @@
 {
   "name": "lipo-express",
   "description": "Lipo middleware for Express and Connect",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Nick Baugh <niftylettuce@gmail.com> (http://niftylettuce.com/)",
   "bugs": {
     "url": "https://github.com/lipojs/lipo-express/issues",
