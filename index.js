@@ -57,7 +57,7 @@ async function lipoExpress(req, res, next) {
         const method = task.shift();
 
         if (!transform[method])
-          throw new Error(
+          throw Boom.badRequest(
             `Invalid or deprecated sharp method "${method}" was passed. See https://sharp.pixelplumbing.com/en/stable/changelog/ (current sharp version is ${version}).`
           );
         return transform[method](...task);
