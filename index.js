@@ -1,14 +1,11 @@
-const _ = require('lodash');
 const Boom = require('@hapi/boom');
+const _ = require('lodash');
 const sharp = require('sharp');
-
-const INVALID_QUEUE = 'Image transformation queue was invalid.';
+const { version } = require('sharp/package.json');
 
 async function lipoExpress(req, res, next) {
   try {
-    const err = Boom.badRequest(
-      _.isFunction(res.__) ? res.__(INVALID_QUEUE) : INVALID_QUEUE
-    );
+    const err = Boom.badRequest('Image transformation queue was invalid.');
 
     if (!_.isString(req.body.queue)) throw Boom.badRequest(err);
 
@@ -22,6 +19,33 @@ async function lipoExpress(req, res, next) {
 
     let metadata = false;
 
+    //
+    // <https://sharp.pixelplumbing.com/en/stable/changelog/#v0210-4th-october-2018>
+    //
+    // Deprecate the following resize-related functions:
+    // - crop
+    // - embed
+    // - ignoreAspectRatio
+    // - max
+    // - min
+    // - withoutEnlargement
+    //
+    // Access to these is now via options passed to the resize function.
+    //
+    // For example:
+    //
+    // embed('north') is now
+    // resize(width, height, { fit: 'contain', position: 'north' })
+    //
+    // crop('attention') is now
+    // resize(width, height, { fit: 'cover', position: 'attention' })
+    //
+    // max().withoutEnlargement() is now
+    // resize(width, height, { fit: 'inside', withoutEnlargement: true })
+    //
+    // min().withoutEnlargement() is now
+    // resize(width, height, { fit: 'inside', withoutEnlargement: true })
+
     const transform = _.reduce(
       queue,
       (transform, task) => {
@@ -30,7 +54,13 @@ async function lipoExpress(req, res, next) {
           return transform;
         }
 
-        return transform[task.shift()](...task);
+        const method = task.shift();
+
+        if (!transform[method])
+          throw new Error(
+            `Invalid or deprecated sharp method "${method}" was passed. See https://sharp.pixelplumbing.com/en/stable/changelog/ (current sharp version is ${version}).`
+          );
+        return transform[method](...task);
       },
       _.isObject(options) ? sharp(options) : sharp()
     );

@@ -13,7 +13,7 @@
   "dependencies": {
     "@hapi/boom": "^8.0.1",
     "lodash": "^4.17.15",
-    "sharp": "^0.23.3"
+    "sharp": "^0.23.4"
   },
   "ava": {
     "failFast": true,
@@ -24,7 +24,7 @@
     "ava": "^2.4.0",
     "codecov": "^3.6.1",
     "cross-env": "^6.0.3",
-    "eslint": "^6.7.1",
+    "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.1.0",
